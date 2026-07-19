@@ -24,7 +24,11 @@ public class App {
     // En macOS el puerto 7000 lo ocupa el receptor de AirPlay (ControlCenter), así
     // que el servidor no puede arrancar ahí. Se toma de CEIL_PORT si está definido.
     private static int puerto() {
-        String valor = System.getenv("CEIL_PORT");
+        // Railway usa PORT, local usa CEIL_PORT, fallback 7000
+        String valor = System.getenv("PORT");
+        if (valor == null || valor.isBlank()) {
+            valor = System.getenv("CEIL_PORT");
+        }
         return (valor == null || valor.isBlank()) ? 7000 : Integer.parseInt(valor);
     }
 
