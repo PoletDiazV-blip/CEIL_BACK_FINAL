@@ -54,3 +54,13 @@ tasks.named('run', JavaExec) {
         }
     }
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'ceil.App'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
