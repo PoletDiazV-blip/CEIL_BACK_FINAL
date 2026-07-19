@@ -5,8 +5,9 @@
     "buildCommand": "./gradlew build -x test"
   },
   "deploy": {
-    "startCommand": "java -jar $(find build/libs -maxdepth 1 -name '*.jar' | head -n 1)",
+    "startCommand": "java -jar build/libs/ceil-backend-nuevo.jar",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
 }
+
