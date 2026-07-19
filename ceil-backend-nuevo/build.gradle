@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Web Framework
+    implementation 'io.javalin:javalin:5.6.3'
+    implementation 'org.slf4j:slf4j-simple:2.0.7'
+
+    // Database Connection Pool
+    implementation 'com.zaxxer:HikariCP:5.0.1'
+
+    // Security (Password Hashing)
+    implementation 'org.mindrot:jbcrypt:0.4'
+
+    // Security (JWT) — Fase 7: autenticación de los endpoints.
+    implementation 'com.auth0:java-jwt:4.4.0'
+
+    // JSON
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+
+    // Driver MySQL. El artefacto `mysql:mysql-connector-java` está descontinuado.
+    implementation 'com.mysql:mysql-connector-j:8.4.0'
+}
+
+application {
+    mainClass = 'ceil.App'
+}
+
+// Carga CeilBakend/.env al ejecutar `gradlew run`, para no tener que exportar las
+// credenciales a mano en cada terminal. En un servidor real ese archivo no existe
+// y se usan las variables de entorno de la máquina.
+tasks.named('run', JavaExec) {
+    def envFile = file("${rootDir}/../.env")
+    if (envFile.exists()) {
+        envFile.readLines().each { line ->
+            line = line.trim()
+            if (line && !line.startsWith('#') && line.contains('=')) {
+                int idx = line.indexOf('=')
+                environment line.substring(0, idx).trim(),
+                            line.substring(idx + 1).trim().replaceAll(/^["']|["']$/, '')
+            }
+        }
+    }
+}
